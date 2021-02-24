@@ -15,6 +15,11 @@ public class JT808Util {
      * 校验码规则：从消息头开始，同后一字节异或，直到校验码前一个字节，占用 1 个字节
      * @param byteBuf
      * @return
+     *
+    ^是异或，相同为0，不同为1，例如int x = 19^20,
+    19:0001 0011
+    20:0001 0100
+     7:0000 0111
      */
     public static byte XorSumBytes(ByteBuf byteBuf) {
         byte sum = byteBuf.getByte(byteBuf.readerIndex());

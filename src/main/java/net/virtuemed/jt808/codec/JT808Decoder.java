@@ -41,7 +41,9 @@ public class JT808Decoder extends ByteToMessageDecoder {
         byte[] raw = new byte[in.readableBytes()];
         in.readBytes(raw);
         ByteBuf escape = revert(raw);
-        //校验
+        //校验码 指从消息头开始，同后一字节异或，直到校验码前一个字节(就是 消息头和消息体部分)，占用一个字节。
+        //标识位|消息头|消息体|检验码|标识位
+        //去除末尾的0x7e,最后一个 就是 检验码
         byte pkgCheckSum = escape.getByte(escape.writerIndex() - 1);
         escape.writerIndex(escape.writerIndex() - 1);//排除校验码
         byte calCheckSum = JT808Util.XorSumBytes(escape);
