@@ -1,5 +1,5 @@
 netty:
-  port: 9009
+  port: 6808
   read-timeout: 15 #读超时 15分钟
   threads:
     boss: 1
