@@ -4,17 +4,22 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.util.ReferenceCountUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import net.virtuemed.jt808.util.BCD;
 import net.virtuemed.jt808.config.JT808Const;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * & 两个操作数中位都为1，结果才为1，否则结果为0，例如下面的程序段。
+ * | 两个位只要有一个为1，那么结果就是1，否则就为0，
+ * ^ 异或运算符,两个操作数的位中，相同则结果为0，不同则结果为1
  * @Author: Zpsw
  * @Date: 2019-05-15
  * @Description:
  * @Version: 1.0
  */
 @Data
+@Slf4j
 public class DataPacket {
 
     protected Header header = new Header(); //消息头
@@ -99,17 +104,23 @@ public class DataPacket {
         private short flowId;// 流水号 2字节
 
         //获取包体长度
+        //1111111111
         public short getMsgBodyLength() {
             return (short) (msgBodyProps & 0x3ff);
         }
 
         //获取加密类型 3bits
+        //1110000000000
         public byte getEncryptionType() {
             return (byte) ((msgBodyProps & 0x1c00) >> 10);
         }
 
         //是否分包
+        //10000000000000
         public boolean hasSubPackage() {
+            //String s = Integer.toBinaryString(msgBodyProps);
+            //String s1 = Integer.toBinaryString(msgBodyProps & 0x2000);
+            //log.info("消息体属性: [{}] : [{}]",s,s1);
             return ((msgBodyProps & 0x2000) >> 13) == 1;
         }
     }
